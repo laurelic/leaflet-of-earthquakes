@@ -7,27 +7,44 @@ d3.json(qUrl, function(data) {
     createBubbles(data.features);
 });
 
+var quakeLayers = {
+    tier0: new L.LayerGroup(),
+    tier1: new L.LayerGroup(),
+    tier2: new L.LayerGroup(),
+    tier3: new L.LayerGroup(),
+    tier4: new L.LayerGroup(),
+    tier5: new L.LayerGroup()
+};
+
 function createBubbles(data) {
-    function onEachFeature(feature, layer) {
-        layer.bindPopup("<p>" + feature.properties.title + "</p>");
-    }
+    // function onEachFeature(feature, layer) {
+    //     layer.bindPopup("<p>" + feature.properties.title + "</p>");
+    // }
+
+    var tierLevel;
 
     var quakes = L.geoJSON(data, {
-        onEachFeature: onEachFeature,
+        //onEachFeature: onEachFeature,
         pointToLayer: function(feature, latlng){
             var mag = feature.properties.mag;
             if(mag < 1) {
                 magColor = "#1a9850"
+                tierLevel = "tier0"
             } else if (mag < 2) {
                 magColor = "#91cf60"
+                tierLevel = "tier1"
             } else if (mag < 3) {
                 magColor = "#d9ef8b"
+                tierlLevel = "tier2"
             } else if (mag < 4) {
                 magColor = "#fee08b"
+                tierLevel = "tier3"
             } else if (mag < 5) {
                 magColor = "#fc8d59"
+                tierLevel = "tier4"
             } else {
                 magColor = "#d73027"
+                tierLevel = "tier5"
             };
             
             var markerStyles = {
@@ -37,7 +54,7 @@ function createBubbles(data) {
                 fillColor: magColor,
                 fillOpacity: 0.6,
             }        
-            return L.circleMarker(latlng, markerStyles);
+            return L.circleMarker(latlng, markerStyles).addTo(quakeLayers[tierLevel]);
         }
 
     });
@@ -63,8 +80,8 @@ function createMap(quakes) {
         accessToken: API_KEY
     });
 
+    //initialize the faultlines layer
     var faultLines = new L.layerGroup();
-
 
 
     //initialize base maps
@@ -103,10 +120,7 @@ function createMap(quakes) {
 
     info.addTo(map);
 
-    L.control.layers(baseMaps, overlayMaps, {
-        collapsed: false
-    }).addTo(map);
-
+    //ensure the legend can flow with the zoom and position view
     map.on('zoomed', onZoomend);
     function onZoomend(){
         if(map.getZoom()>0){
@@ -114,39 +128,24 @@ function createMap(quakes) {
         }
     };
 
+    //layer the ampes on each other
+    L.control.layers(baseMaps, overlayMaps, {
+        collapsed: false
+    }).addTo(map);
+
+    //draw the plate lines
     d3.json(pUrl, function(data) {
         L.geoJSON(data, {
+            onEachFeature: function(feature, layer) {
+                layer.bindPopup(feature.properties.PlateName + " Plate");
+            },
             style: {
                 color: "#fdae61",
                 weight: 2,
                 fillOpacity: 0
             }
         }).addTo(faultLines);
-        //drawFaults(data.features);
     });
-
-    // function drawFaults(plateData) {
-    //     var
-    // }
-    //query tectonic plate information for 
-    // var plates = d3.json(pUrl, function(data) {
-    //     console.log(Object.keys(data.features));
-    //     var plateObject = data.features;
-    //     plateObject.forEach(function(plate){
-    //         var polyline = L.polyline(plate.geometry.coordinates, {
-    //             weight: 2,
-    //             color: "#ffffbf"
-    //         }).addTo(fault);
-    //     })
-    //     }
-        //     var polyline = L.polyline(plate.geometry.coordinates, {
-        //         weight: 2,
-        //         color: "#ffffbf"
-        //     }).addTo(map)
-        // })
-
-
-    //);
     
 };
 

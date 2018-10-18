@@ -116,10 +116,34 @@ function createMap(quakes) {
         zoom: 3,
         layers: [satelliteLayer, quakes]
     });
+// initialize legend
+    var info = L.control({
+        position: "bottomright"
+    });
+
+    info.onAdd = function() {
+        var div = L.DomUtil.create("div", "legend");
+        var labels = ["<1", "1-2", "2-3", "3-4", "4-5", "5+"];
+        var colors = ["#1a9850", "#91cf60", "#d9ef8b", "#fee08b", "#fc8d59", "#d73027"];
+        div.innerHTML = "<div><b>Magnitudes</b></div>";
+        for (var i=0; i < labels.length; i++) {
+            div.innerHTML += '<i style="background:' + colors[i] + '">&nbsp;</i>&nbsp;&nbsp;' + labels[i] + '<br/>';
+        }
+        return div;
+    };
+
+    info.addTo(map);
 
     L.control.layers(baseMaps, quakeLayer, {
         collapsed: false
     }).addTo(map);
+
+    map.on('zoomed', onZoomend);
+    function onZoomend(){
+        if(map.getZoom()>0){
+            map.removeControl(info);
+        }
+    };
     
 };
 

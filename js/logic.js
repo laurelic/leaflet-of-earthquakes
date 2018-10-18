@@ -1,36 +1,15 @@
 // // Store our API endpoint inside queryUrl
 var qUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+var pUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json"
 
-
+//query USGS for earthquake information
 d3.json(qUrl, function(data) {
     createBubbles(data.features);
-    // centerMap(data);
-
 });
-
-//build a function for centering the map
-// function centerMap(data) {
-//     var corner1 = L.latLng(data.bbox[1], data.bbox[0]),
-//     corner2 = L.latLng(data.bbox[4], data.bbox[3]),
-//     mc = Object.values(L.latLngBounds(corner1, corner2).getCenter());
-
-//     return mc;
-// };
-
-// var mapCenter = d3.json(qUrl, function(data) {
-//     var corner1 = L.latLng(data.bbox[1], data.bbox[0]),
-//     corner2 = L.latLng(data.bbox[4], data.bbox[3]),
-//     mc = Object.values(L.latLngBounds(corner1, corner2).getCenter());
-//     console.log(mc)
-//     return mc;
-// });
 
 function createBubbles(data) {
     function onEachFeature(feature, layer) {
-        // lat = feature.geometry.coordinates[1],
-        // lng = feature.geometry.coordinates[0],
         layer.bindPopup("<p>" + feature.properties.title + "</p>");
-        // layer.circleMarker([lat, lng], {radius: feature.properties.mag * 10});
     }
 
     var quakes = L.geoJSON(data, {
@@ -59,31 +38,14 @@ function createBubbles(data) {
                 fillOpacity: 0.6,
             }        
             return L.circleMarker(latlng, markerStyles);
-            // if(latlng.lng < 0){
-            //     latlng.lng = latlng.lng + 360
-            // }
-            // return L.circleMarker(latlng, markerStyles);
-            // console.log(latlng)
         }
 
     });
-
-    //var vectorGrid = L.vectorGrid.slicer()
 
     createMap(quakes);
 }
 
 function createMap(quakes) {
-
-//initialize the layergroups we will use
-// var layers = {
-//     tier0: new L.LayerGroup(),
-//     tier1: new L.LayerGroup(),
-//     tier2: new L.LayerGroup(),
-//     tier3: new L.LayerGroup(),
-//     tier4: new L.LayerGroup(),
-//     tier5: new L.LayerGroup(),
-// };
 
     //Create a satellite view layer
     var satelliteLayer = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
@@ -93,7 +55,7 @@ function createMap(quakes) {
         accessToken: API_KEY
     });
 
-    //Create a satellite view layer
+    //Create a greyscale view layer
     var lightLayer = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
         attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
         maxZoom: 18,
@@ -101,22 +63,29 @@ function createMap(quakes) {
         accessToken: API_KEY
     });
 
+    var faultLines = new L.layerGroup();
+
+
+
+    //initialize base maps
     var baseMaps = {
         "Satellite View": satelliteLayer,
         "Outline View": lightLayer
     };
 
-    var quakeLayer = {
-        Earthquakes: quakes
+    var overlayMaps = {
+        "Earthquakes": quakes,
+        "Fault Lines": faultLines
     };
-// // Perform a GET request to the query URL
 
+    //build the map
     var map = L.map("map-id", {
         center: [19.8968, -155.5828],
         zoom: 3,
-        layers: [satelliteLayer, quakes]
+        layers: [satelliteLayer, quakes, faultLines]
     });
-// initialize legend
+
+    // build the legend
     var info = L.control({
         position: "bottomright"
     });
@@ -134,7 +103,7 @@ function createMap(quakes) {
 
     info.addTo(map);
 
-    L.control.layers(baseMaps, quakeLayer, {
+    L.control.layers(baseMaps, overlayMaps, {
         collapsed: false
     }).addTo(map);
 
@@ -144,10 +113,42 @@ function createMap(quakes) {
             map.removeControl(info);
         }
     };
+
+    d3.json(pUrl, function(data) {
+        L.geoJSON(data, {
+            style: {
+                color: "#fdae61",
+                weight: 2,
+                fillOpacity: 0
+            }
+        }).addTo(faultLines);
+        //drawFaults(data.features);
+    });
+
+    // function drawFaults(plateData) {
+    //     var
+    // }
+    //query tectonic plate information for 
+    // var plates = d3.json(pUrl, function(data) {
+    //     console.log(Object.keys(data.features));
+    //     var plateObject = data.features;
+    //     plateObject.forEach(function(plate){
+    //         var polyline = L.polyline(plate.geometry.coordinates, {
+    //             weight: 2,
+    //             color: "#ffffbf"
+    //         }).addTo(fault);
+    //     })
+    //     }
+        //     var polyline = L.polyline(plate.geometry.coordinates, {
+        //         weight: 2,
+        //         color: "#ffffbf"
+        //     }).addTo(map)
+        // })
+
+
+    //);
     
 };
-
-
 
 
 

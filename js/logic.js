@@ -27,11 +27,22 @@ d3.json(qUrl, function(data) {
 
 function createBubbles(data) {
     function onEachFeature(feature, layer) {
+        // lat = feature.geometry.coordinates[1],
+        // lng = feature.geometry.coordinates[0],
         layer.bindPopup("<p>" + feature.properties.title + "</p>");
+        // layer.circleMarker([lat, lng], {radius: feature.properties.mag * 10});
     }
 
     var quakes = L.geoJSON(data, {
-        onEachFeature: onEachFeature
+        onEachFeature: onEachFeature,
+        pointToLayer: function(feature, latlng){
+            var markerStyles = {
+                radius: feature.properties.mag * 2,
+                fillColor: "red"
+            }
+            return L.circleMarker(latlng, markerStyles)
+        }
+
     });
 
     createMap(quakes);
@@ -76,7 +87,7 @@ function createMap(quakes) {
 // // Perform a GET request to the query URL
 
     var map = L.map("map-id", {
-        center: [5.2, -0.06],
+        center: [34.0522, -118.2437],
         zoom: 3,
         layers: [satelliteLayer, quakes]
     });

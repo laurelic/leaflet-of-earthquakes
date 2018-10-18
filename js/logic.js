@@ -36,14 +36,39 @@ function createBubbles(data) {
     var quakes = L.geoJSON(data, {
         onEachFeature: onEachFeature,
         pointToLayer: function(feature, latlng){
+            var mag = feature.properties.mag;
+            if(mag < 1) {
+                magColor = "#1a9850"
+            } else if (mag < 2) {
+                magColor = "#91cf60"
+            } else if (mag < 3) {
+                magColor = "#d9ef8b"
+            } else if (mag < 4) {
+                magColor = "#fee08b"
+            } else if (mag < 5) {
+                magColor = "#fc8d59"
+            } else {
+                magColor = "#d73027"
+            };
+            
             var markerStyles = {
                 radius: feature.properties.mag * 2,
-                fillColor: "red"
-            }
-            return L.circleMarker(latlng, markerStyles)
+                color: magColor,
+                weight: 1,
+                fillColor: magColor,
+                fillOpacity: 0.6,
+            }        
+            return L.circleMarker(latlng, markerStyles);
+            // if(latlng.lng < 0){
+            //     latlng.lng = latlng.lng + 360
+            // }
+            // return L.circleMarker(latlng, markerStyles);
+            // console.log(latlng)
         }
 
     });
+
+    //var vectorGrid = L.vectorGrid.slicer()
 
     createMap(quakes);
 }
@@ -87,7 +112,7 @@ function createMap(quakes) {
 // // Perform a GET request to the query URL
 
     var map = L.map("map-id", {
-        center: [34.0522, -118.2437],
+        center: [19.8968, -155.5828],
         zoom: 3,
         layers: [satelliteLayer, quakes]
     });

@@ -165,9 +165,37 @@ d3.json(pUrl, function(data) {
     }).addTo(faultLines);
 });
 
+// var layerStyles = {
+//     quake0: { 
+//         criteria: feature.properties.mag < 1, 
+//         color: "#a6d96a",
+//     },
+//     quake1: {
+//         criteria: feature.properties.mag >= 1 && feature.properties.mag < 2,
+//         color: "#d9ef8b"
+//     },
+//     quake2: {
+//         criteria: feature.properties.mag >= 2 && feature.properties.mag < 3,
+//         color: "#ffffbf"
+//     },
+//     quake3: {
+//         criteria: feature.properties.mag >= 3 && feature.properties.mag < 4,
+//         color: "#fee08b"
+//     },
+//     quake4: {
+//         criteria: feature.properties.mag >= 3 && feature.properties.mag < 4,
+//         color: "#fdae61"
+//     },
+//     quake5: {
+//         criteria: feature.properties.mag >5,
+//         color: "#f46d43"
+//     }
+// };
+
 //add the tier 0 
 d3.json(qUrl, function(data) {
     var allQuakes = L.geoJSON(data);
+
         var quake0 = L.geoJSON(data, {
             filter: function(feature, layer) {
                 return feature.properties.mag < 1;
@@ -175,22 +203,105 @@ d3.json(qUrl, function(data) {
             pointToLayer: function(feature, latlng) {
                 return L.circleMarker(latlng, {
                     radius: feature.properties.mag * 2,
-                    color: "#1a9850",
+                    color: "#66bd63",
                     weight: 1,
-                    fillColor: "#1a9850",
+                    fillColor: "#66bd63",
                     fillOpacity: 0.6,
                     }).on('click', function() {
                         this.bindPopup(feature.properties.title).openPopup();
                     });
-            },
+            }
         });
         
         var quake1 = L.geoJSON(data, {
             filter: function(feature, layer) {
-                return feature.properties.mag >= 1 &&
+                return feature.properties.mag >= 1 && feature.properties.mag < 2;
+            },
+            pointToLayer: function(feature, latlng) {
+                return L.circleMarker(latlng, {
+                    radius: feature.properties.mag * 2,
+                    color: "#66bd63",
+                    weight: 1,
+                    fillColor: "#66bd63",
+                    fillOpacity: 0.6,
+                    }).on('click', function() {
+                        this.bindPopup(feature.properties.title).openPopup();
+                    });
             }
-        })
+        });
+
+        var quake2 = L.geoJSON(data, {
+            filter: function(feature, layer) {
+                return feature.properties.mag >= 2 && feature.properties.mag < 3;
+            },
+            pointToLayer: function(feature, latlng) {
+                return L.circleMarker(latlng, {
+                    radius: feature.properties.mag * 2,
+                    color: "#a6d96a",
+                    weight: 1,
+                    fillColor: "#a6d96a",
+                    fillOpacity: 0.6,
+                    }).on('click', function() {
+                        this.bindPopup(feature.properties.title).openPopup();
+                })
+            }
+        });
+        var quake3 = L.geoJSON(data, {
+            filter: function(feature, layer) {
+                return feature.properties.mag >= 3 && feature.properties.mag < 4;
+            },
+            pointToLayer: function(feature, latlng) {
+                return L.circleMarker(latlng, {
+                    radius: feature.properties.mag * 2,
+                    color: "#fdae61",
+                    weight: 1,
+                    fillColor: "#fdae61",
+                    fillOpacity: 0.6,
+                    }).on('click', function() {
+                        this.bindPopup(feature.properties.title).openPopup();
+                })
+            }
+        });
+        var quake4 = L.geoJSON(data, {
+            filter: function(feature, layer) {
+                return feature.properties.mag >= 4 && feature.properties.mag < 5;
+            },
+            pointToLayer: function(feature, latlng) {
+                return L.circleMarker(latlng, {
+                    radius: feature.properties.mag * 2,
+                    color: "#f46d43",
+                    weight: 1,
+                    fillColor: "#f46d43",
+                    fillOpacity: 0.6,
+                    }).on('click', function() {
+                        this.bindPopup(feature.properties.title).openPopup();
+                })
+            }
+        });
+        var quake5 = L.geoJSON(data, {
+            filter: function(feature, layer) {
+                return feature.properties.mag > 5;
+            },
+            pointToLayer: function(feature, latlng) {
+                return L.circleMarker(latlng, {
+                    radius: feature.properties.mag * 2,
+                    color: "#d73027",
+                    weight: 1,
+                    fillColor: "#d73027",
+                    fillOpacity: 0.6,
+                    }).on('click', function() {
+                        this.bindPopup(feature.properties.title).openPopup();
+                })
+            }
+        });
+
+
         quake0.addTo(quakeLayers.tier0)
+        quake1.addTo(quakeLayers.tier1)
+        quake2.addTo(quakeLayers.tier2)
+        quake3.addTo(quakeLayers.tier3)
+        quake4.addTo(quakeLayers.tier4)
+        quake5.addTo(quakeLayers.tier5)
 })
     
 //};

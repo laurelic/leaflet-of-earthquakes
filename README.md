@@ -10,6 +10,9 @@ The earthquake visuals are color-coded according to magnitude, and they can also
 
 In order to better illustrate  the relationship between seismic activity and tectonic plates, the tectonic plates are also visualized. Like the earthquake data, you may click on the plate and see the name of the plate.
 
+To view the fully rendered visual, please click [here.](https://laurelic.github.io/leaflet-of-earthquakes/)
+
 ### Data Sources
 [USGS GeoJSON Feed](http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php)
+
 [Tectonic Plates](https://github.com/fraxen/tectonicplate)

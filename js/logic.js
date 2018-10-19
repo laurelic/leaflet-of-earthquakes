@@ -54,6 +54,7 @@ var overlayMaps = {
 var map = L.map("map-id", {
     center: [0, 0],
     zoom: 3,
+    worldCopyJump: true,
     layers: [
         satelliteLayer,
         faultLines,

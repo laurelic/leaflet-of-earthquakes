@@ -1,9 +1,25 @@
-html,
-body,
-#map-id {
-  height: 100%;
+html, body #container{
   padding: 0;
   margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+
+
+
+html, body, #map-id{
+  height:100%;
+}
+
+#map-id {
+  /* position: absolute; */
+  height: 100%;
+  top: 80px;
+  bottom: 0;
+  padding-right: 0px;
+  padding-left: 0px;
+  display: block;
 }
 
 .legend {
@@ -15,4 +31,11 @@ body,
   background-color: white;
   border-radius: 5px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.navbar {
+  position: fixed;
+  /* top: 0; */
+  width: 100%;
+  margin-bottom: 0
 }

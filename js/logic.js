@@ -2,60 +2,6 @@
 var qUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 var pUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json"
 
-//query USGS for earthquake information
-// d3.json(qUrl, function(data) {
-//     createBubbles(data.features);
-// });
-
-
-
-// function createBubbles(data) {
-//     // function onEachFeature(feature, layer) {
-//     //     layer.bindPopup("<p>" + feature.properties.title + "</p>");
-//     // }
-
-//     var tierLevel;
-
-//     var quakes = L.geoJSON(data, {
-//         //onEachFeature: onEachFeature,
-//         pointToLayer: function(feature, latlng){
-//             var mag = feature.properties.mag;
-//             if(mag < 1) {
-//                 magColor = "#1a9850"
-//                 tierLevel = "tier0"
-//             } else if (mag < 2) {
-//                 magColor = "#91cf60"
-//                 tierLevel = "tier1"
-//             } else if (mag < 3) {
-//                 magColor = "#d9ef8b"
-//                 tierlLevel = "tier2"
-//             } else if (mag < 4) {
-//                 magColor = "#fee08b"
-//                 tierLevel = "tier3"
-//             } else if (mag < 5) {
-//                 magColor = "#fc8d59"
-//                 tierLevel = "tier4"
-//             } else {
-//                 magColor = "#d73027"
-//                 tierLevel = "tier5"
-//             };
-            
-//             var markerStyles = {
-//                 radius: feature.properties.mag * 2,
-//                 color: magColor,
-//                 weight: 1,
-//                 fillColor: magColor,
-//                 fillOpacity: 0.6,
-//             }        
-//             return L.circleMarker(latlng, markerStyles).addTo(quakeLayers[tierLevel]);
-//         }
-
-//     });
-
-//     createMap(quakes);
-// }
-
-//function createMap(quakes) {
 
 //Create a satellite view layer
 var satelliteLayer = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
@@ -106,7 +52,7 @@ var overlayMaps = {
 
 //build the map
 var map = L.map("map-id", {
-    center: [19.8968, -155.5828],
+    center: [0, 0],
     zoom: 3,
     layers: [
         satelliteLayer,
@@ -165,34 +111,8 @@ d3.json(pUrl, function(data) {
     }).addTo(faultLines);
 });
 
-// var layerStyles = {
-//     quake0: { 
-//         criteria: feature.properties.mag < 1, 
-//         color: "#a6d96a",
-//     },
-//     quake1: {
-//         criteria: feature.properties.mag >= 1 && feature.properties.mag < 2,
-//         color: "#d9ef8b"
-//     },
-//     quake2: {
-//         criteria: feature.properties.mag >= 2 && feature.properties.mag < 3,
-//         color: "#ffffbf"
-//     },
-//     quake3: {
-//         criteria: feature.properties.mag >= 3 && feature.properties.mag < 4,
-//         color: "#fee08b"
-//     },
-//     quake4: {
-//         criteria: feature.properties.mag >= 3 && feature.properties.mag < 4,
-//         color: "#fdae61"
-//     },
-//     quake5: {
-//         criteria: feature.properties.mag >5,
-//         color: "#f46d43"
-//     }
-// };
 
-//add the tier 0 
+//create a geoJson and filter by magnitude to add to each layer
 d3.json(qUrl, function(data) {
     var allQuakes = L.geoJSON(data);
 
@@ -302,9 +222,8 @@ d3.json(qUrl, function(data) {
         quake3.addTo(quakeLayers.tier3)
         quake4.addTo(quakeLayers.tier4)
         quake5.addTo(quakeLayers.tier5)
-})
-    
-//};
+});
+
 
 
 

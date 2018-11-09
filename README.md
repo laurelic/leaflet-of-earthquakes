@@ -14,3 +14,5 @@ In order to better illustrate  the relationship between seismic activity and tec
 [USGS GeoJSON Feed](http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php)
 
 [Tectonic Plates](https://github.com/fraxen/tectonicplate)
+
+To view the final product, please click [here](https://laurelic.github.io/leaflet-of-earthquakes/)
